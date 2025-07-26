@@ -1,0 +1,25 @@
+[package]
+name = "turing-complete-riscv"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+r0 = "1.0.0"
+
+[profile.release]
+strip = true
+lto = true
+opt-level = 3
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+strip = true
+lto = true
+opt-level = 3
+codegen-units = 1
+panic = "abort"
+
+[[bin]]
+name = "turing_complete_riscv"
+path = "src/main.rs"
