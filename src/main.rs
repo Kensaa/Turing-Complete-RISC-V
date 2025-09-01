@@ -2,11 +2,13 @@
 #![no_main]
 #![allow(unsafe_op_in_unsafe_fn)]
 use crate::console::Console;
+use crate::keyboard::Keyboard;
 use core::arch::{asm, global_asm};
 use core::hint::black_box;
 use core::panic::PanicInfo;
 
 mod console;
+mod keyboard;
 
 global_asm!(include_str!("init.S"));
 unsafe extern "C" {
@@ -42,13 +44,24 @@ unsafe fn halt() -> () {
 }
 
 unsafe fn main() {
-    let ptr = 0x5000 as *mut u8;
-    let randptr = 0xA008 as *mut u16;
+    // let ptr = 0x5000 as *mut u8;
+    // let randptr = 0xA008 as *mut u16;
 
     // *ptr = (*ptr2 % *ptr3) as u8;
     // *ptr = 'z'.to_ascii_lowercase() as u8;
     let mut console = Console::new();
-    console.write_number(0, fibo2(black_box(30)));
+    let mut keyboard = Keyboard::new();
+
+    let mut index = 0;
+    loop {
+        let (key, keyup) = keyboard.read_key();
+        if keyup {
+            console.write_char(index, key);
+            index += 1;
+        }
+    }
+    // console.write_number(0, fibo2(black_box(30)));
+    // }
     // for i in 0..15 {
     //     console.write_number(i * 16, fibo2(i as u8));
     // }
