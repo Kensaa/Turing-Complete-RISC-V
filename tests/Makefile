@@ -2,7 +2,7 @@ CC =  riscv64-elf-gcc
 OBJCOPY = riscv64-elf-objcopy
 
 CFLAGS = -march=rv32im -mabi=ilp32 -nostdlib
-LDFLAGS = -nostdlib -nostartfiles -Ttext=0x0
+LDFLAGS = -nostdlib -nostartfiles -T ../link.ld
 
 SRCDIR = .
 BUILDDIR = build

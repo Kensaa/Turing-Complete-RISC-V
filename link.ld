@@ -44,10 +44,9 @@ SECTIONS {
 
   . = ALIGN(8);
   PROVIDE(_heap_start = .);
-  PROVIDE(_heap_end = _heap_start + 4K);
-
   PROVIDE(_stack_end = ORIGIN(RAM) + LENGTH(RAM));
   PROVIDE(_stack_start = _stack_end - 2048);  /* 2 KiB stack */
+  PROVIDE(_heap_end    = _stack_start);
   /DISCARD/ : {
     *(.eh_frame*)  /* Rust unwinding info (not needed here) */
   }

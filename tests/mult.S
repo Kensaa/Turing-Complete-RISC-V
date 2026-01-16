@@ -89,6 +89,24 @@ _start:
     li x20, 0
     bne x19, x20, error
 
+    li x5, 0xFFFFFFFF
+    li x6, 0x80000000
+    mulhu x7, x5, x6    # x7 = 0x7FFFFFFF
+    li x20, 0x7FFFFFFF
+    bne x7, x20, error
+
+    li x5, 0x80000000
+    li x6, 0x80000000
+    mulhu x7, x5, x6    # x7 = 0x40000000
+    li x20, 0x40000000
+    bne x7, x20, error
+
+    li x5, -2147483648
+    li x6, -2147483648
+    mulh x7, x5, x6     #x7 = 0x40000000
+    li x20, 0x40000000
+    bne x7, x20, error
+
 # Halt (success)
 halt:
     j halt
