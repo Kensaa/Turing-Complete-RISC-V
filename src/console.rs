@@ -1,9 +1,11 @@
 const CONSOLE_WIDTH: usize = 80;
 const CONSOLE_HEIGHT: usize = 24;
 const CONSOLE_SIZE: usize = CONSOLE_WIDTH * CONSOLE_HEIGHT;
-const MAX_DIGIT: usize = 2u128.pow(64).ilog10() as usize;
 
 const CONSOLE_ADDR: usize = 0x5000;
+
+type Num = u64;
+const MAX_DIGIT: usize = 2u128.pow(size_of::<Num>() as u32 * 8).ilog10() as usize;
 pub struct Console {
     pixels: &'static mut [u8; CONSOLE_SIZE],
 }
@@ -29,7 +31,7 @@ impl Console {
         return len;
     }
 
-    pub fn write_number(&mut self, index: usize, mut number: u64) -> usize {
+    pub fn write_number(&mut self, index: usize, mut number: Num) -> usize {
         if number == 0 {
             self.pixels[index] = '0' as u8;
             return 1;
@@ -38,7 +40,8 @@ impl Console {
         let mut digits = [0; MAX_DIGIT];
         let mut i = 0;
         while number > 0 && i < MAX_DIGIT {
-            digits[i] = (number % 10) as u8;
+            let digit = (number % 10);
+            digits[i] = digit as u8;
             i = i + 1;
             number = number / 10;
         }
