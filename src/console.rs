@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 const CONSOLE_WIDTH: usize = 80;
 const CONSOLE_HEIGHT: usize = 24;
 const CONSOLE_SIZE: usize = CONSOLE_WIDTH * CONSOLE_HEIGHT;
@@ -10,6 +11,7 @@ pub struct Console {
     pixels: &'static mut [u8; CONSOLE_SIZE],
 }
 
+#[allow(unused)]
 impl Console {
     pub fn new() -> Self {
         let pixels = unsafe { &mut *(CONSOLE_ADDR as *mut [u8; CONSOLE_SIZE]) };
@@ -40,7 +42,7 @@ impl Console {
         let mut digits = [0; MAX_DIGIT];
         let mut i = 0;
         while number > 0 && i < MAX_DIGIT {
-            let digit = (number % 10);
+            let digit = number % 10;
             digits[i] = digit as u8;
             i = i + 1;
             number = number / 10;

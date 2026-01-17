@@ -1,10 +1,12 @@
 #![no_std]
 #![no_main]
 #![allow(unsafe_op_in_unsafe_fn)]
+#[allow(unused)]
 extern crate alloc;
 
 use crate::console::Console;
 use crate::keyboard::Keyboard;
+use crate::screen::{Screen, Tile};
 use core::alloc::{GlobalAlloc, Layout};
 use core::arch::{asm, global_asm};
 use core::cell::UnsafeCell;
@@ -13,6 +15,7 @@ use core::ptr::{self, addr_of, write_volatile};
 
 mod console;
 mod keyboard;
+mod screen;
 
 global_asm!(include_str!("init.S"));
 unsafe extern "C" {
@@ -107,68 +110,25 @@ unsafe fn halt() -> () {
     asm!("ebreak");
 }
 
+#[allow(unused)]
 unsafe fn main() {
-    // let ptr = 0x5000 as *mut u8;
-    // let randptr = 0xA008 as *mut u16;
-
-    // *ptr = (*ptr2 % *ptr3) as u8;
-    // *ptr = 'z'.to_ascii_lowercase() as u8;
     let mut console = Console::new();
     let mut keyboard = Keyboard::new();
+    let mut screen = Screen::new();
 
-    let mut index = 0;
-    loop {
-        let (key, keyup) = keyboard.read_key();
-        if keyup {
-            console.write_char(index, key);
-            index += 1;
-        }
+    let mut tile = Tile::new();
+
+    for i in 0..5 {
+        tile.add_pixel(i, i);
     }
-    // console.write_number(0, fibo2(black_box(30)));
-    // }
-    // for i in 0..15 {
-    //     console.write_number(i * 16, fibo2(i as u8));
-    // }
-    // let n = black_box(m(12, 10));
-    // *ptr = n;
-    // console.write_number(0, black_box(fibo2(30)));
-    // console.write_number(0, black_box(a(35, 8) as u32));
-    // for i in 0..15 {
-    //     console.write_number(i * 16, black_box(fibo2(i as u8) as u32));
-    // }
+
+    for i in 0..5 {
+        screen.set_tile(
+            Tile::tile_pos_to_index(i, i),
+            &tile,
+            screen::get_color(255, 0, 0),
+        );
+    }
 
     halt();
-}
-
-fn a(a: u8, b: u8) -> u8 {
-    a % b
-}
-
-fn fibo(n: u8) -> u16 {
-    if n <= 0 {
-        return 0;
-    }
-    if n == 1 {
-        return 1;
-    }
-
-    return fibo(n - 1) + fibo(n - 2);
-}
-
-fn fibo2(n: u8) -> u32 {
-    if n == 0 {
-        return 0;
-    }
-    if n == 1 {
-        return 1;
-    }
-
-    let mut a = 0;
-    let mut b = 1;
-    for _ in 0..n {
-        let c = a + b;
-        a = b;
-        b = c;
-    }
-    return b;
 }

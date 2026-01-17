@@ -1,6 +1,7 @@
 use core::ptr::{read_volatile, write_volatile};
 
 const KEYBOARD_ADDRESS: usize = 0x5780;
+#[allow(unused)]
 pub struct Keyboard {
     read: *mut u8,
     read_available: *const u8,
@@ -8,6 +9,7 @@ pub struct Keyboard {
     key_up: *const u8,
 }
 
+#[allow(unused)]
 impl Keyboard {
     pub fn new() -> Self {
         let ptr = KEYBOARD_ADDRESS as *mut u8;
